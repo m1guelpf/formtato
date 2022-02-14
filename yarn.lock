@@ -787,6 +787,18 @@
   resolved "https://registry.yarnpkg.com/@pedrouid/environment/-/environment-1.0.1.tgz#858f0f8a057340e0b250398b75ead77d6f4342ec"
   integrity sha512-HaW78NszGzRZd9SeoI3JD11JqY+lubnaOx7Pewj5pfjqWXOEATpeKIFb9Z4t2WBUK2iryiXX3lzWwmYWgUL0Ug==
 
+"@prisma/client@^3.9.2":
+  version "3.9.2"
+  resolved "https://registry.yarnpkg.com/@prisma/client/-/client-3.9.2.tgz#ad17dcfb702842573fe6ec3b7dc4615eff8d8fc6"
+  integrity sha512-VlEIYVMyfFZHbVBOlunPl47gmP/Z0zzPjPj8I7uKEIaABqrUy50ru3XS0aZd8GFvevVwt7p91xxkUjNjrWhKAQ==
+  dependencies:
+    "@prisma/engines-version" "3.9.0-58.bcc2ff906db47790ee902e7bbc76d7ffb1893009"
+
+"@prisma/engines-version@3.9.0-58.bcc2ff906db47790ee902e7bbc76d7ffb1893009":
+  version "3.9.0-58.bcc2ff906db47790ee902e7bbc76d7ffb1893009"
+  resolved "https://registry.yarnpkg.com/@prisma/engines-version/-/engines-version-3.9.0-58.bcc2ff906db47790ee902e7bbc76d7ffb1893009.tgz#ea03ffa723382a526dc6625ce6eae9b6ad984400"
+  integrity sha512-5Dh+qTDhpPR66w6NNAnPs+/W/Qt4r1DSd+qhfPFcDThUK4uxoZKGlPb2IYQn5LL+18aIGnmteDf7BnVMmvBNSQ==
+
 "@rushstack/eslint-patch@^1.0.8":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.1.0.tgz#7f698254aadf921e48dda8c0a6b304026b8a9323"

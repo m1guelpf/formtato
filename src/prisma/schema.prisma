@@ -1,0 +1,14 @@
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+model Comission {
+    id              Int      @id @default(autoincrement())
+    name            String   @db.VarChar(255)
+    twitterUsername String   @db.VarChar(255)
+    txHash          String   @db.VarChar(255)
+    inspirationURI  String?  @db.VarChar(255)
+    createdAt       DateTime @default(now()) @db.Timestamp(6)
+    finished        Boolean  @default(false)
+}

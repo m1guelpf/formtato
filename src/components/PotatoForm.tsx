@@ -1,23 +1,31 @@
+import axios from 'axios'
 import { Button, Card, Field, FieldSet, Heading, IconUpload, Input, MediaPicker, Stack, Stat, Tag, Text } from 'degen'
 import { BigNumber } from 'ethers'
 import { FC, useEffect, useMemo, useState } from 'react'
 import { useAccount, useTransaction } from 'wagmi'
 import ConnectWallet from './ConnectWallet'
+import UploadFile from './UploadFile'
 
 enum FORM_STATES {
 	ENTER_DETAILS,
-	CONFIRM,
+	REVIEW,
+	CONFIRMED,
 }
 
 const PotatoForm: FC = () => {
 	const [formState, setFormState] = useState<FORM_STATES>(FORM_STATES.ENTER_DETAILS)
 	const [name, setName] = useState('')
 	const [twitterUsername, setTwitterUsername] = useState('')
-	const [inspiration, setInspiration] = useState<File>(null)
+	const [inspirationURI, setInspirationURI] = useState<string>(null)
+	const [inspirationFileName, setInspirationFileName] = useState<string>(null)
 	const [walletAddress, setWalletAddress] = useState('')
 
-	const onTransaction = (tx: string) => {
-		console.log(tx)
+	const onTransaction = async (tx: string) => {
+		const id = await axios
+			.post('/api/request', { name, twitterUsername, txHash: tx, inspirationURI })
+			.then(res => res.data)
+
+		alert(`Your Comission ID is ${id}.`)
 	}
 
 	const formPage = useMemo(() => {
@@ -30,20 +38,21 @@ const PotatoForm: FC = () => {
 							setName,
 							twitterUsername,
 							setTwitterUsername,
-							setInspiration,
+							setInspirationURI,
+							setInspirationFileName,
 							walletAddress,
 							setWalletAddress,
-							submitForm: () => setFormState(FORM_STATES.CONFIRM),
+							submitForm: () => setFormState(FORM_STATES.REVIEW),
 						}}
 					/>
 				)
-			case FORM_STATES.CONFIRM:
+			case FORM_STATES.REVIEW:
 				return (
 					<ReviewPotatoDetails
 						{...{
 							name,
 							twitterUsername,
-							inspiration,
+							inspirationFileName,
 							walletAddress,
 							onTransaction,
 						}}
@@ -67,13 +76,14 @@ const EnterDataState = ({
 	setName,
 	twitterUsername,
 	setTwitterUsername,
-	setInspiration,
+	setInspirationURI,
+	setInspirationFileName,
 	walletAddress,
 	setWalletAddress,
 	submitForm,
 }) => {
 	const [errors, setErrors] = useState({ name: null, twitterUsername: null, walletAddress: null })
-	const [{ data, error, loading }, disconnect] = useAccount()
+	const [{ data, error, loading }] = useAccount()
 
 	const validateAndSubmit = event => {
 		event.preventDefault()
@@ -118,11 +128,9 @@ const EnterDataState = ({
 					}
 					description="The avatar you want your potato to be inspired on."
 				>
-					<MediaPicker
-						accept="image/jpeg, image/png, image/webp, image/gif"
-						label="Upload inspiration"
-						required
-						onChange={file => setInspiration(file)}
+					<UploadFile
+						onChange={imageURI => setInspirationURI(imageURI)}
+						onFileLoad={file => setInspirationFileName(file?.name)}
 					/>
 				</Field>
 				<Input
@@ -145,14 +153,14 @@ const EnterDataState = ({
 const ReviewPotatoDetails: FC<{
 	name: string
 	twitterUsername: string
-	inspiration?: File
+	inspirationFileName?: string
 	walletAddress: string
 	onTransaction: (string) => void
-}> = ({ name, twitterUsername, inspiration, walletAddress, onTransaction }) => {
+}> = ({ name, twitterUsername, inspirationFileName, walletAddress, onTransaction }) => {
 	const [{ data, error, loading }, payOrder] = useTransaction({
 		request: {
-			to: 'anarueda.eth',
-			value: BigNumber.from('50000000000000000'), // 1 ETH
+			to: '0xf3C56cdDf1A64aaA15DC6F2d137E79F74Dd07C41',
+			value: BigNumber.from('50000000000000000'), // 0.05 ETH
 		},
 	})
 
@@ -184,7 +192,7 @@ const ReviewPotatoDetails: FC<{
 					<dt className="font-medium text-gray-400">Wallet Address</dt>
 					<dd className="mt-1 text-gray-300">{walletAddress}</dd>
 				</div>
-				{inspiration && (
+				{inspirationFileName && (
 					<div className="sm:col-span-2">
 						<dt className="text-sm font-medium text-gray-400">Attachments</dt>
 						<dd className="mt-1 text-sm text-gray-900">
@@ -196,7 +204,7 @@ const ReviewPotatoDetails: FC<{
 											aria-hidden="true"
 										/>
 										<span className="ml-2 flex-1 w-0 truncate text-gray-200">
-											{inspiration.name}
+											{inspirationFileName}
 										</span>
 									</div>
 								</li>

@@ -2,8 +2,9 @@ import axios from 'axios'
 import Layout from '@/components/Layout'
 import { GetStaticProps } from 'next'
 import PotatoForm from '@/components/PotatoForm'
+import { PrismaClient } from '@prisma/client'
 
-const Index = ({ potatoes }) => {
+const Index = ({ potatoes, comissionQueue }) => {
 	return (
 		<Layout>
 			<div className="space-y-10">
@@ -37,6 +38,7 @@ const Index = ({ potatoes }) => {
 }
 
 export const getStaticProps: GetStaticProps = async context => {
+	const prisma = new PrismaClient()
 	// const potatoes = await axios
 	// 	.get('https://api.opensea.io/api/v1/assets?collection=potato-but-cute&limit=50', {
 	// 		headers: { 'X-API-KEY': process.env.OPENSEA_KEY },
@@ -50,7 +52,9 @@ export const getStaticProps: GetStaticProps = async context => {
 	// 		}))
 	// 	)
 
-	return { props: { potatoes: [] } }
+	const comissionQueue = await prisma.comission.count({ where: { finished: false } })
+
+	return { props: { potatoes: [], comissionQueue } }
 }
 
 export default Index

@@ -41,22 +41,22 @@ const Index = ({ potatoes, comissionQueue }) => {
 
 export const getStaticProps: GetStaticProps = async context => {
 	const prisma = new PrismaClient()
-	// const potatoes = await axios
-	// 	.get('https://api.opensea.io/api/v1/assets?collection=potato-but-cute&limit=50', {
-	// 		headers: { 'X-API-KEY': process.env.OPENSEA_KEY },
-	// 	})
-	// 	.then(res =>
-	// 		res.data.assets.map(nft => ({
-	// 			image: nft.image_url,
-	// 			name: nft.name,
-	// 			description: nft.description,
-	// 			href: nft.permalink,
-	// 		}))
-	// 	)
+	const potatoes = await axios
+		.get('https://api.opensea.io/api/v1/assets?collection=potato-but-cute&limit=50', {
+			headers: { 'X-API-KEY': process.env.OPENSEA_KEY },
+		})
+		.then(res =>
+			res.data.assets.map(nft => ({
+				image: nft.image_url,
+				name: nft.name,
+				description: nft.description,
+				href: nft.permalink,
+			}))
+		)
 
 	const comissionQueue = await prisma.comission.count({ where: { finished: false } })
 
-	return { props: { potatoes: [], comissionQueue } }
+	return { props: { potatoes, comissionQueue }, revalidate: 30 }
 }
 
 export default Index

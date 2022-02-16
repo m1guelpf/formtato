@@ -214,7 +214,7 @@ const ReviewPotatoDetails: FC<{
 					<dt className="font-medium text-gray-400">Wallet Address</dt>
 					<a href={`https://etherscan.io/address/${walletAddress}`} target="_blank" rel="noreferrer">
 						<dd className="mt-1 text-gray-300 flex items-center space-x-1">
-							<span>{walletAddress}</span>
+							<span className="truncate">{walletAddress}</span>
 							<ExternalLinkIcon className="h-5 w-5 text-gray-400" />
 						</dd>
 					</a>

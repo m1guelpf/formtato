@@ -35,9 +35,12 @@ const Index: FC<{
 						</div>
 					))}
 				</div>
-				<p className="text-gray-500 text-lg">
-					There&apos;s currently {comissionQueue} potatoes in the queue, yours could be the next one!
-				</p>
+				{comissionQueue && (
+					<p className="text-gray-500 text-lg">
+						There&apos;s currently {comissionQueue} {comissionQueue == 1 ? 'potato' : 'potatoes'} in the
+						queue, yours could be the next one!
+					</p>
+				)}
 				<PotatoForm />
 			</div>
 		</Layout>

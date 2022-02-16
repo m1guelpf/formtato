@@ -1,7 +1,8 @@
-import Layout from '@/components/Layout'
+import axios from 'axios'
 import { GetStaticProps } from 'next'
-import PotatoForm from '@/components/PotatoForm'
+import Layout from '@/components/Layout'
 import { PrismaClient } from '@prisma/client'
+import PotatoForm from '@/components/PotatoForm'
 
 const Index = ({ potatoes, comissionQueue }) => {
 	return (

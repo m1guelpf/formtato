@@ -2,15 +2,31 @@ import { FC } from 'react'
 import Head from 'next/head'
 
 const Layout: FC = ({ children }) => {
+	const meta = {
+		title: "Ana's Potato Form",
+		description: 'Request a personalised potato NFT from anarueda.eth',
+		image: 'https://lh3.googleusercontent.com/NC0EQjsUtWMJXocosXOPxeKWHvH8M5SoQYkPNyRCILbGGtEXLXXaPUTIZQ_jUATqCb0pq71TT154H9wVOt4ME-cswRqfcwUyVOuXjA=w1200',
+	}
+
 	return (
 		<>
 			<Head>
-				<title>Ana&apos;s Potato Form</title>
-				<meta
-					content="Request a personalised potato NFT from anarueda.eth"
-					key="description"
-					name="description"
-				/>
+				<title>{meta.title}</title>
+				<meta name="title" content={meta.title} />
+				<meta name="description" content={meta.description} />
+
+				<meta property="og:type" content="website" />
+				<meta property="og:url" content="https://potato.anarueda.art/" />
+				<meta property="og:title" content={meta.title} />
+				<meta property="og:description" content={meta.description} />
+				<meta property="og:image" content={meta.image} />
+
+				<meta property="twitter:card" content="summary_large_image" />
+				<meta property="twitter:url" content="https://potato.anarueda.art/" />
+				<meta property="twitter:title" content={meta.title} />
+				<meta property="twitter:description" content={meta.description} />
+				<meta property="twitter:image" content={meta.image} />
+				<meta property="twitter:creator" content="@ruedart" />
 			</Head>
 
 			<svg height="0" viewBox="0 0 200 188" width="0">

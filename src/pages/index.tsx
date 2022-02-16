@@ -1,4 +1,3 @@
-import axios from 'axios'
 import Layout from '@/components/Layout'
 import { GetStaticProps } from 'next'
 import PotatoForm from '@/components/PotatoForm'
@@ -31,6 +30,9 @@ const Index = ({ potatoes, comissionQueue }) => {
 						</div>
 					))}
 				</div>
+				<p className="text-gray-500 text-lg">
+					There&apos;s currently {comissionQueue} potatoes in the queue, yours could be the next one!
+				</p>
 				<PotatoForm />
 			</div>
 		</Layout>

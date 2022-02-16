@@ -1,9 +1,24 @@
 import axios from 'axios'
-import { Button, Card, Field, FieldSet, Heading, IconUpload, Input, MediaPicker, Stack, Stat, Tag, Text } from 'degen'
+import {
+	Button,
+	Card,
+	Field,
+	FieldSet,
+	Heading,
+	IconLink,
+	IconUpload,
+	Input,
+	MediaPicker,
+	Stack,
+	Stat,
+	Tag,
+	Text,
+} from 'degen'
 import { BigNumber } from 'ethers'
-import { FC, useEffect, useMemo, useState } from 'react'
+import { Dispatch, FC, SetStateAction, useEffect, useMemo, useState } from 'react'
 import { useAccount, useTransaction } from 'wagmi'
 import ConnectWallet from './ConnectWallet'
+import ExternalLinkIcon from './Icons/ExternalLinkIcon'
 import UploadFile from './UploadFile'
 
 enum FORM_STATES {
@@ -19,13 +34,15 @@ const PotatoForm: FC = () => {
 	const [inspirationURI, setInspirationURI] = useState<string>(null)
 	const [inspirationFileName, setInspirationFileName] = useState<string>(null)
 	const [walletAddress, setWalletAddress] = useState('')
+	const [comissionID, setComissionID] = useState<number>(null)
 
 	const onTransaction = async (tx: string) => {
 		const id = await axios
 			.post('/api/request', { name, twitterUsername, txHash: tx, inspirationURI })
 			.then(res => res.data)
 
-		alert(`Your Comission ID is ${id}.`)
+		setComissionID(id)
+		setFormState(FORM_STATES.CONFIRMED)
 	}
 
 	const formPage = useMemo(() => {
@@ -58,9 +75,12 @@ const PotatoForm: FC = () => {
 						}}
 					/>
 				)
+
+			case FORM_STATES.CONFIRMED:
+				return <PotatoConfirmationState comissionID={comissionID} />
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [name, twitterUsername, walletAddress, formState])
+	}, [name, twitterUsername, walletAddress, comissionID, formState])
 
 	return (
 		<Card padding="6" shadow>
@@ -71,7 +91,17 @@ const PotatoForm: FC = () => {
 	)
 }
 
-const EnterDataState = ({
+const EnterDataState: FC<{
+	name: string
+	setName: Dispatch<SetStateAction<string>>
+	twitterUsername: string
+	setTwitterUsername: Dispatch<SetStateAction<string>>
+	setInspirationURI: Dispatch<SetStateAction<string>>
+	setInspirationFileName: Dispatch<SetStateAction<string>>
+	walletAddress: string
+	setWalletAddress: Dispatch<SetStateAction<string>>
+	submitForm: () => void
+}> = ({
 	name,
 	setName,
 	twitterUsername,
@@ -83,7 +113,7 @@ const EnterDataState = ({
 	submitForm,
 }) => {
 	const [errors, setErrors] = useState({ name: null, twitterUsername: null, walletAddress: null })
-	const [{ data, error, loading }] = useAccount()
+	const [{ data: account }] = useAccount()
 
 	const validateAndSubmit = event => {
 		event.preventDefault()
@@ -144,7 +174,7 @@ const EnterDataState = ({
 				/>
 			</FieldSet>
 			<div className="mt-6 flex justify-end">
-				{data?.address ? <Button variant="primary">Review Details</Button> : <ConnectWallet />}
+				{account?.address ? <Button variant="primary">Review Details</Button> : <ConnectWallet />}
 			</div>
 		</form>
 	)
@@ -157,7 +187,7 @@ const ReviewPotatoDetails: FC<{
 	walletAddress: string
 	onTransaction: (string) => void
 }> = ({ name, twitterUsername, inspirationFileName, walletAddress, onTransaction }) => {
-	const [{ data, error, loading }, payOrder] = useTransaction({
+	const [{ data: transaction, error: txError, loading }, payOrder] = useTransaction({
 		request: {
 			to: '0xf3C56cdDf1A64aaA15DC6F2d137E79F74Dd07C41',
 			value: BigNumber.from('50000000000000000'), // 0.05 ETH
@@ -165,17 +195,18 @@ const ReviewPotatoDetails: FC<{
 	})
 
 	useEffect(() => {
-		if (!data?.hash) return
+		if (!transaction?.hash) return
 
-		onTransaction(data.hash)
-	}, [data])
+		onTransaction(transaction.hash)
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [transaction])
 
 	useEffect(() => {
-		if (!error) return
-		if (/User rejected request/.test(error.message)) return
+		if (!txError) return
+		if (/User rejected request/.test(txError.message)) return
 
-		alert(error.message)
-	}, [error])
+		alert(txError.message)
+	}, [txError])
 
 	return (
 		<div className="px-4 py-5 sm:px-6">
@@ -186,11 +217,21 @@ const ReviewPotatoDetails: FC<{
 				</div>
 				<div className="sm:col-span-1">
 					<dt className="font-medium text-gray-400">Twitter Username</dt>
-					<dd className="mt-1 text-gray-300">{twitterUsername}</dd>
+					<a href={`https://twitter.com/${twitterUsername}`} target="_blank" rel="noreferrer">
+						<dd className="mt-1 text-gray-300 flex items-center space-x-1">
+							<span>{twitterUsername}</span>
+							<ExternalLinkIcon className="h-5 w-5 text-gray-400" />
+						</dd>
+					</a>
 				</div>
 				<div className="sm:col-span-1">
 					<dt className="font-medium text-gray-400">Wallet Address</dt>
-					<dd className="mt-1 text-gray-300">{walletAddress}</dd>
+					<a href={`https://etherscan.io/address/${walletAddress}`} target="_blank" rel="noreferrer">
+						<dd className="mt-1 text-gray-300 flex items-center space-x-1">
+							<span>{walletAddress}</span>
+							<ExternalLinkIcon className="h-5 w-5 text-gray-400" />
+						</dd>
+					</a>
 				</div>
 				{inspirationFileName && (
 					<div className="sm:col-span-2">
@@ -225,6 +266,22 @@ const ReviewPotatoDetails: FC<{
 				<Button loading={loading} disabled={loading} onClick={() => payOrder()}>
 					Order Potato
 				</Button>
+			</div>
+		</div>
+	)
+}
+
+const PotatoConfirmationState: FC<{ comissionID: number }> = ({ comissionID }) => {
+	return (
+		<div className="mt-4">
+			<p className="text-white text-lg mb-6">
+				I&apos;ve planted the seed, and will reach out once your potato grows out of it. Hope you enjoy! ☺️
+			</p>
+			<div className="mt-8">
+				<p className="mt-1 text-xs text-gray-100">
+					For reference, your order ID is {comissionID}.{' '}
+					<span className="font-semibold">Hope you enjoy the potato-ness!</span>
+				</p>
 			</div>
 		</div>
 	)

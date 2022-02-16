@@ -1,25 +1,11 @@
 import axios from 'axios'
-import {
-	Button,
-	Card,
-	Field,
-	FieldSet,
-	Heading,
-	IconLink,
-	IconUpload,
-	Input,
-	MediaPicker,
-	Stack,
-	Stat,
-	Tag,
-	Text,
-} from 'degen'
 import { BigNumber } from 'ethers'
-import { Dispatch, FC, SetStateAction, useEffect, useMemo, useState } from 'react'
-import { useAccount, useTransaction } from 'wagmi'
-import ConnectWallet from './ConnectWallet'
-import ExternalLinkIcon from './Icons/ExternalLinkIcon'
 import UploadFile from './UploadFile'
+import ConnectWallet from './ConnectWallet'
+import { useAccount, useTransaction } from 'wagmi'
+import ExternalLinkIcon from './Icons/ExternalLinkIcon'
+import { Dispatch, FC, SetStateAction, useEffect, useMemo, useState } from 'react'
+import { Button, Card, Field, FieldSet, Heading, IconUpload, Input, Tag, Text } from 'degen'
 
 enum FORM_STATES {
 	ENTER_DETAILS,

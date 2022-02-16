@@ -1,7 +1,7 @@
-import { Chain, Connector, normalizeChainId, SwitchChainError, UserRejectedRequestError } from 'wagmi'
-import Web3Modal, { ICoreOptions } from 'web3modal'
-import { Web3Provider, JsonRpcSigner } from '@ethersproject/providers'
 import { getAddress } from 'ethers/lib/utils'
+import Web3Modal, { ICoreOptions } from 'web3modal'
+import { Web3Provider } from '@ethersproject/providers'
+import { Chain, Connector, normalizeChainId } from 'wagmi'
 
 export class Web3ModalConnector extends Connector {
 	readonly id = 'web3modal'

@@ -1,9 +1,9 @@
+import Sendgrid from '@sendgrid/mail'
 import { PrismaClient } from '@prisma/client'
 import { NextApiRequest, NextApiResponse } from 'next'
-import Sendgrid from '@sendgrid/mail'
 
-Sendgrid.setApiKey(process.env.SENDGRID_KEY)
 const prisma = new PrismaClient()
+Sendgrid.setApiKey(process.env.SENDGRID_KEY)
 
 const handler = async ({ body }: NextApiRequest, res: NextApiResponse) => {
 	const comission = await prisma.comission.create({

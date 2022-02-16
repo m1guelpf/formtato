@@ -1,5 +1,5 @@
-import { Button, IconLockClosed, IconWallet } from 'degen'
 import { useConnect } from 'wagmi'
+import { Button, IconLockClosed } from 'degen'
 
 const ConnectWallet = () => {
 	const [{ data, error }, connect] = useConnect()

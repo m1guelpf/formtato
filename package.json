@@ -5,7 +5,8 @@
 		"dev": "next dev",
 		"build": "next build",
 		"start": "next start",
-		"lint": "next lint"
+		"lint": "next lint",
+		"postinstall": "prisma generate --schema=./src/prisma/schema.prisma"
 	},
 	"dependencies": {
 		"@fontsource/ia-writer-mono": "^4.5.1",

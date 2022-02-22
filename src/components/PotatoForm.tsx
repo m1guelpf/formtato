@@ -175,7 +175,7 @@ const ReviewPotatoDetails: FC<{
 }> = ({ name, twitterUsername, inspirationFileName, walletAddress, onTransaction }) => {
 	const [{ data: transaction, error: txError, loading }, payOrder] = useTransaction({
 		request: {
-			to: '0xf3C56cdDf1A64aaA15DC6F2d137E79F74Dd07C41',
+			to: process.env.NEXT_PUBLIC_WALLET_ADDRESS,
 			value: BigNumber.from('50000000000000000'), // 0.05 ETH
 		},
 	})
@@ -263,6 +263,19 @@ const PotatoConfirmationState: FC<{ comissionID: number }> = ({ comissionID }) =
 			<p className="text-white text-lg mb-6">
 				I&apos;ve planted the seed, and will reach out once your potato grows out of it. Hope you enjoy! ☺️
 			</p>
+			<div className="flex justify-center">
+				<Button
+					as="a"
+					variant="secondary"
+					href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(
+						'https://potato.anarueda.art'
+					)}&text=${encodeURIComponent('🌱 Just ordered a hand-painted potato from @ruedart\n\n')}`}
+					target="_blank"
+					rel="noreferrer"
+				>
+					Share on Twitter
+				</Button>
+			</div>
 			<div className="mt-8">
 				<p className="mt-1 text-xs text-gray-100">
 					For reference, your order ID is {comissionID}.{' '}

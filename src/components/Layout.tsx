@@ -1,11 +1,12 @@
 import { FC } from 'react'
 import Head from 'next/head'
+import coverImage from '@images/cover.jpg'
 
 const Layout: FC = ({ children }) => {
 	const meta = {
 		title: "Ana's Potato Form",
 		description: 'Request a personalised potato NFT from anarueda.eth',
-		image: 'https://lh3.googleusercontent.com/NC0EQjsUtWMJXocosXOPxeKWHvH8M5SoQYkPNyRCILbGGtEXLXXaPUTIZQ_jUATqCb0pq71TT154H9wVOt4ME-cswRqfcwUyVOuXjA=w1200',
+		image: `https://potato.anarueda.art${coverImage.src}`,
 	}
 
 	return (
